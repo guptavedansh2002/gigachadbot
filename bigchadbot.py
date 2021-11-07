@@ -2,6 +2,7 @@ import discord
 import random
 import asyncpraw
 
+
 reddit1 = asyncpraw.Reddit(client_id = "GGj6f657ASp5KYtTU-HxJw",
                      client_secret = "RGFyym8y8tRkfarv3wJpaba2ui7DZA",
                      username = "bigchadtest",
@@ -44,7 +45,7 @@ async def _8ball(ctx, *, question):
                  "My sources say no.",
                  "Outlook not so good.", 
                  "Outlook good.", 
-                 "Reply hazy, try again.", 
+                 "You can't handle the truth.", 
                  "Signs point to yes.", 
                  "Very doubtful.", 
                  "Without a doubt.",
@@ -119,5 +120,27 @@ async def memes(ctx):
 async def clear(ctx, amount=10):
     await ctx.channel.purge(limit = amount)
     
+@client.command()
+async def kick(ctx, member : discord.Member, *,reason = None):
+    await member.kick(reason = reason)
+    await ctx.send(f"Ha!, Pro Move for kicking {member.mention}")
+
+@client.command()
+async def ban(ctx, member : discord.Member, *,reason = None):
+    await member.ban(reason = reason)
+    await ctx.send(f"Ha!, Pro Move for banning {member.mention}")
+
+@client.command()
+async def unban(ctx, *,member):
+    banned_users = await ctx.guild.bans() #returns list, thus async for can't be used
+    member_name, member_discriminator = member.split("#")
+
+    for ban_entry in banned_users:
+        user = ban_entry.user
+
+        if (user.name, user.discriminator) == (member_name, member_discriminator):
+            await ctx.guild.unban(user)
+            await ctx.send(f"Ahh!, Nevermind, unbanned {user.mention} <")
+            return
 
 client.run('OTA2NzMwMjIxNTk0NjE1ODU5.YYc4Uw.26O35k_TyWpUBsW-Xgy-MC60erM')
